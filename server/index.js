@@ -1,5 +1,6 @@
 const admin = require('firebase-admin')
 const env = require('./env')
+const store = require('./store')
 const serviceAccount = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS)
 
 admin.initializeApp({
@@ -9,23 +10,14 @@ admin.initializeApp({
         uid: env.DATABASE_AUTH_VARIABLE_UID,
     },
 })
-const db = admin.database()
-const ref = db.ref('/')
-const usersRef = ref.child('users')
 
-usersRef.set({
-    userName: 'Lee Dong Wook',
-})
-usersRef.update({
-    date_of_birth: '6-11-1980',
-})
-
-ref.on(
-    'value',
-    function (snapshot) {
-        console.log(snapshot.val())
+const polls = [
+    {
+        pollId: '1',
+        question: 'Sun rises from East?',
+        option1: { id: 'xfch', text: 'true' },
+        option2: { id: 'cscf', text: 'false' },
     },
-    function (errorObject) {
-        console.log('The read failed: ' + errorObject.code)
-    }
-)
+]
+store.createPoll(polls)
+store.readPoll()
