@@ -1,8 +1,9 @@
 const admin = require('firebase-admin');
+
 const env = require('./env');
 const store = require('./store');
-const serviceAccount = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS);
 
+const serviceAccount = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: env.DATABASE_URL,
@@ -20,9 +21,8 @@ const polls = [
   },
 ];
 
-const interactFirebase = async () => {
+(async () => {
   await store.writeToRef(polls);
   const data = await store.readFromRef();
   console.log(data);
-};
-interactFirebase();
+})();

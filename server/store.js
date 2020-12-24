@@ -3,12 +3,8 @@ const admin = require('firebase-admin');
 exports.readFromRef = async (refrencePath = '/') => {
   const db = admin.database();
   const ref = db.ref(refrencePath);
-  try {
-    const snapshot = await ref.once('value');
-    return snapshot.val();
-  } catch (errorObject) {
-    console.error('The read failed', errorObject.code);
-  }
+  const snapshot = await ref.once('value');
+  return snapshot.val();
 };
 
 exports.writeToRef = async (object, refrencePath = '/') => {
