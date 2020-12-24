@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "export": "next export",
-    "start": "next start"
+    "test": "eslint .",
+    "start": "npm run dev"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "next": "10.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1"
