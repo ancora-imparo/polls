@@ -14,11 +14,11 @@ admin.initializeApp({
   },
 });
 app.get('/', (req, res) => {
-  res.status(200).send();
+  res.response.set('Access-Control-Allow-Origin', '*').status(200).send();
 });
 app.get('/polls', async (req, res) => {
   const polls = await store.readFromRef();
-  res.status(200).send(polls);
+  res.set('Access-Control-Allow-Origin', '*').status(200).send(polls);
 });
 const polls = [
   {
