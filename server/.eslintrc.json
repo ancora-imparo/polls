@@ -5,12 +5,14 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:prettier/recommended", "eslint:recommended"],
+  "extends": ["prettier", "eslint"],
   "parserOptions": {
     "ecmaVersion": 12
   },
+
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-unused-vars": "warn"
   }
 }
