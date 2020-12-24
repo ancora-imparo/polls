@@ -1,27 +1,27 @@
 const admin = require('firebase-admin');
 
-exports.readPoll = async (fbRef = '/') => {
-  try {
-    const db = admin.database();
-    const ref = db.ref(fbRef);
-    ref.on(
-      'value',
-      (snapshot) => {
-        console.log(snapshot.val());
-        return snapshot.val();
-      },
-      (errorObject) => {
-        console.log('The read failed: ' + errorObject.code);
-      }
-    );
-  } catch (error) {
-    return error;
-  }
+exports.readFromRef = async (refrencePath = '/') => {
+  const db = admin.database();
+  const ref = db.ref(refrencePath);
+  ref.on(
+    'value',
+    (snapshot) => {
+      console.log(snapshot.val());
+      return snapshot.val();
+    },
+    (errorObject) => {
+      console.error('The read failed', errorObject.code);
+    }
+  );
 };
 
-exports.createPoll = async (pollObj, fbRef = '/') => {
+exports.createPoll = async (
+  pollObj,
+  refrencePath = '/',
+  childPath = 'Polls'
+) => {
   const db = admin.database();
-  const ref = db.ref(fbRef);
-  const pollsRef = ref.child('Polls');
+  const ref = db.ref(refrencePath);
+  const pollsRef = ref.child(childPath);
   await pollsRef.set(pollObj);
 };

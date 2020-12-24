@@ -21,5 +21,5 @@ const polls = [
 ];
 
 store.createPoll(polls);
-const data = store.readPoll();
+const data = store.readFromRef();
 console.log(data);

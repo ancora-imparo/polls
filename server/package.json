@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "eslint",
-    "dev": "nodemon server.js"
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -22,12 +22,12 @@
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.0",
+    "nodemon": "^2.0.6",
     "prettier": "^2.2.1"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
     "firebase-admin": "^9.4.2",
-    "lodash": "^4.17.20",
-    "nodemon": "^2.0.6"
+    "lodash": "^4.17.20"
   }
 }
