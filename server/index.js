@@ -20,6 +20,6 @@ const polls = [
   },
 ];
 
-store.createPoll(polls);
+store.writeToRef(polls);
 const data = store.readFromRef();
 console.log(data);

@@ -6,7 +6,6 @@ exports.readFromRef = async (refrencePath = '/') => {
   ref.on(
     'value',
     (snapshot) => {
-      console.log(snapshot.val());
       return snapshot.val();
     },
     (errorObject) => {
@@ -15,13 +14,8 @@ exports.readFromRef = async (refrencePath = '/') => {
   );
 };
 
-exports.createPoll = async (
-  pollObj,
-  refrencePath = '/',
-  childPath = 'Polls'
-) => {
+exports.writeToRef = async (object, refrencePath = '/') => {
   const db = admin.database();
   const ref = db.ref(refrencePath);
-  const pollsRef = ref.child(childPath);
-  await pollsRef.set(pollObj);
+  return ref.set(object);
 };
