@@ -20,6 +20,9 @@ const polls = [
   },
 ];
 
-store.writeToRef(polls);
-const data = store.readFromRef();
-console.log(data);
+const interactFirebase = async () => {
+  await store.writeToRef(polls);
+  const data = await store.readFromRef();
+  console.log(data);
+};
+interactFirebase();
