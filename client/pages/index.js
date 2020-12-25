@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <center>
       <h2>Polls</h2>
-      <pre>{JSON.stringify(polls)}</pre>
+      <pre>{JSON.stringify(polls, null, 2)}</pre>
     </center>
   );
 }
