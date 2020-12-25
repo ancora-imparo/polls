@@ -3,15 +3,17 @@ import axios from 'axios';
 
 export default function Home() {
   const [polls, setPolls] = useState([]);
-  (async () => {
+  useEffect(async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/polls`);
-      const get_data = response.data;
-      setPolls(get_data);
+      const response = await axios.get(
+        `https://ancora-imparo-polls-api.herokuapp.com/polls`
+      );
+      const getData = response.data;
+      setPolls(getData);
     } catch (err) {
-      console.log(err);
+      console.error('error:', err);
     }
-  })();
+  });
 
   return (
     <center>
