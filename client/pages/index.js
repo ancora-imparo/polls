@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import TextField from '@material-ui/core/TextField';
+import { Fab } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
 export default function Home() {
   const [polls, setPolls] = useState([]);
@@ -17,8 +20,24 @@ export default function Home() {
 
   return (
     <center>
-      <h2>Polls</h2>
-      <pre>{JSON.stringify(polls, null, 2)}</pre>
+      <h2>Create a new poll</h2>
+      <TextField
+        id="standard-basic"
+        margin="normal"
+        style={{ width: '45%' }}
+        label="Enter the question here"
+      />
+      <div>
+        <TextField
+          id="standard-basic"
+          margin="normal"
+          style={{ width: '45%' }}
+          label="Enter the option"
+        />
+        <Fab color="primary" aria-label="add">
+          <AddIcon />
+        </Fab>
+      </div>
     </center>
   );
 }
