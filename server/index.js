@@ -24,7 +24,7 @@ app.get('/polls', async (req, res) => {
   const polls = await store.readFromRef();
   res.set('Access-Control-Allow-Origin', '*').status(200).send(polls);
 });
-const validatPoll = (polls) => {
+const validatePoll = (polls) => {
   const schema = Joi.object({
     question: Joi.string().required(),
     option1: Joi.string().required(),
@@ -33,17 +33,39 @@ const validatPoll = (polls) => {
   });
   return schema.validate(polls);
 };
-app.post('/polls', async (req, res) => {
-  const { error } = validatPoll(req.body);
+
+const validatePollCount = (polls) => {
+  const schema = Joi.object({
+    pollId: Joi.string().required(),
+    optionId: Joi.string().required(),
+  });
+  return schema.validate(polls);
+};
+
+app.post('/polls/create', async (req, res) => {
+  const { error } = validatePoll(req.body);
   if (error) return res.status(400).send(error.details[0].message);
   const polls = {
-    pollId: req.body.pollId || uuidv4(),
-    question: req.body.question,
-    option1: { id: uuidv4(), text: req.body.option1 },
-    option2: { id: uuidv4(), text: req.body.option2 },
+    [uuidv4()]: {
+      question: req.body.question,
+      option: {
+        [uuidv4()]: { value: req.body.option1, count: 0 },
+        [uuidv4()]: { value: req.body.option2, count: 0 },
+      },
+    },
   };
+  pollId = Object.keys(polls)[0];
+  await store.writeToRef(polls, `/polls/`);
+  res.status(200).send(pollId);
+});
 
-  await store.writeToRef(polls, `/${polls.pollId}`);
+app.post('/polls/count', async (req, res) => {
+  const { error } = validatePollCount(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { polls } = await store.readFromRef();
+  polls[req.body.pollId].option[req.body.optionId].count++;
+  await store.writeToRef(polls, `/polls/`);
   res.status(200).send(polls.pollId);
 });
 
