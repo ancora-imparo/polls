@@ -1,13 +1,14 @@
 const admin = require('firebase-admin');
 const express = require('express');
-const app = express();
-app.use(express.json());
 const Joi = require('joi');
 const { v4: uuidv4 } = require('uuid');
 const _ = require('lodash');
 
 const env = require('./env');
 const store = require('./store');
+
+const app = express();
+app.use(express.json());
 
 const serviceAccount = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS);
 admin.initializeApp({
@@ -27,8 +28,7 @@ app.get('/polls', async (req, res) => {
 const validatePoll = (polls) => {
   const schema = Joi.object({
     question: Joi.string().required(),
-    option1: Joi.string().required(),
-    option2: Joi.string().required(),
+    option: Joi.array().required(),
     pollId: Joi.string(),
   });
   return schema.validate(polls);
@@ -44,14 +44,16 @@ const validatePollCount = (polls) => {
 
 app.post('/polls/create', async (req, res) => {
   const { error } = validatePoll(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  const errorMessage = _.get(error, 'detais.[0].message', 'Error in vaidation');
+  if (error) return res.status(400).send(errorMessage);
+  optionObject = {};
+  req.body.option.forEach((opt) => {
+    optionObject[uuidv4()] = { value: opt, count: 0 };
+  });
   const polls = {
     [uuidv4()]: {
       question: req.body.question,
-      option: {
-        [uuidv4()]: { value: req.body.option1, count: 0 },
-        [uuidv4()]: { value: req.body.option2, count: 0 },
-      },
+      option: optionObject,
     },
   };
   pollId = Object.keys(polls)[0];
@@ -61,8 +63,8 @@ app.post('/polls/create', async (req, res) => {
 
 app.post('/polls/count', async (req, res) => {
   const { error } = validatePollCount(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
+  const errorMessage = _.get(error, 'detais.[0].message', 'Error in vaidation');
+  if (error) return res.status(400).send(errorMessage);
   const { polls } = await store.readFromRef();
   polls[req.body.pollId].option[req.body.optionId].count++;
   await store.writeToRef(polls, `/polls/`);
