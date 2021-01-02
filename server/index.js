@@ -46,7 +46,7 @@ app.post('/polls/create', async (req, res) => {
   const { error } = validatePoll(req.body);
   const errorMessage = _.get(
     error,
-    'detais.[0].message',
+    'details.[0].message',
     'Error in validation'
   );
   if (error) return res.status(400).send(errorMessage);
@@ -67,7 +67,7 @@ app.post('/polls/count', async (req, res) => {
   const { error } = validatePollCount(req.body);
   const errorMessage = _.get(
     error,
-    'detais.[0].message',
+    'details.[0].message',
     'Error in validation'
   );
   if (error) return res.status(400).send(errorMessage);
