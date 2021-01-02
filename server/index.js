@@ -10,12 +10,12 @@ const store = require('./store');
 const app = express();
 app.use(express.json());
 
-const serviceAccount = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS);
+const serviceAccount = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS_SERVER);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: env.DATABASE_URL,
   databaseAuthVariableOverride: {
-    uid: env.DATABASE_AUTH_VARIABLE_UID,
+    uid: env.DATABASE_AUTH_VARIABLE_UID_SERVER,
   },
 });
 app.get('/', (req, res) => {
@@ -34,6 +34,15 @@ const validatePoll = (polls) => {
   return schema.validate(polls);
 };
 
+app.get('/sdk', (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*').status(200).send({
+    GOOGLE_APPLICATION_CREDENTIALS_CLIENT:
+      env.GOOGLE_APPLICATION_CREDENTIALS_CLIENT,
+    DATABASE_URL: env.DATABASE_URL,
+    DATABASE_AUTH_VARIABLE_UID_CLIENT: env.DATABASE_AUTH_VARIABLE_UID_CLIENT,
+  });
+});
+
 const validatePollCount = (polls) => {
   const schema = Joi.object({
     pollId: Joi.string().required(),
@@ -50,7 +59,7 @@ app.post('/polls/create', async (req, res) => {
     'Error in validation'
   );
   if (error) return res.status(400).send(errorMessage);
-  optionObject = {};
+  const optionObject = {};
   req.body.options.forEach((opt) => {
     optionObject[uuidv4()] = { value: opt, count: 0 };
   });
