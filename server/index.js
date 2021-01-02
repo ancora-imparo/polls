@@ -28,7 +28,7 @@ app.get('/polls', async (req, res) => {
 const validatePoll = (polls) => {
   const schema = Joi.object({
     question: Joi.string().required(),
-    option: Joi.array().required(),
+    options: Joi.array().required(),
     pollId: Joi.string(),
   });
   return schema.validate(polls);
@@ -44,31 +44,37 @@ const validatePollCount = (polls) => {
 
 app.post('/polls/create', async (req, res) => {
   const { error } = validatePoll(req.body);
-  const errorMessage = _.get(error, 'detais.[0].message', 'Error in vaidation');
+  const errorMessage = _.get(
+    error,
+    'detais.[0].message',
+    'Error in validation'
+  );
   if (error) return res.status(400).send(errorMessage);
   optionObject = {};
-  req.body.option.forEach((opt) => {
+  req.body.options.forEach((opt) => {
     optionObject[uuidv4()] = { value: opt, count: 0 };
   });
-  const polls = {
-    [uuidv4()]: {
-      question: req.body.question,
-      option: optionObject,
-    },
+  const pollId = uuidv4();
+  const poll = {
+    question: req.body.question,
+    options: optionObject,
   };
-  pollId = Object.keys(polls)[0];
-  await store.writeToRef(polls, `/polls/`);
+  await store.writeToRef(poll, `polls/${pollId}`);
   res.status(200).send(pollId);
 });
 
 app.post('/polls/count', async (req, res) => {
   const { error } = validatePollCount(req.body);
-  const errorMessage = _.get(error, 'detais.[0].message', 'Error in vaidation');
+  const errorMessage = _.get(
+    error,
+    'detais.[0].message',
+    'Error in validation'
+  );
   if (error) return res.status(400).send(errorMessage);
-  const { polls } = await store.readFromRef();
-  polls[req.body.pollId].option[req.body.optionId].count++;
-  await store.writeToRef(polls, `/polls/`);
-  res.status(200).send(polls.pollId);
+  const poll = await store.readFromRef(`/polls/${req.body.pollId}`);
+  poll.options[req.body.optionId].count++;
+  await store.writeToRef(poll, `/polls/${req.body.pollId}`);
+  res.status(200).send(req.body.pollId);
 });
 
 const port = env.SERVER_PORT;
