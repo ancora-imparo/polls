@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import initializeFirebase from './firebase';
+
 export default function Home() {
   const [polls, setPolls] = useState([]);
   useEffect(async () => {
@@ -13,7 +15,14 @@ export default function Home() {
     } catch (err) {
       console.error('error:', err);
     }
-  });
+    try {
+      const response = await axios.get('http://localhost:4000/sdk');
+      const endpoints = response.data;
+      initializeFirebase(endpoints);
+    } catch (err) {
+      console.error('error:', err);
+    }
+  }, []);
 
   return (
     <center>
