@@ -8,7 +8,9 @@ export default function Home() {
 
   useEffect(async () => {
     try {
-      const response = await axios.get('http://localhost:4000/sdk');
+      const response = await axios.get(
+        `https://ancora-imparo-polls-api.herokuapp.com/polls`
+      );
       const firebaseConfig = response.data;
 
       await firebase.initializeApp(firebaseConfig);
