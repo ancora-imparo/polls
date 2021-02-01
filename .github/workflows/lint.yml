@@ -1,0 +1,23 @@
+name: Linter-ESLint
+
+on:[pull_request, workflow_dispatch]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node_version:'14'
+      
+      - name: Install npm packages
+        run: npm install
+      - name: test with Eslint
+        run: npm run test 
+         
