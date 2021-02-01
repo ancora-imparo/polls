@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { initializeFirebase, readFromRef } from './firebase';
+import { initializeFirebase, readFromRef } from '../components/firebase';
 export default function Home() {
   const [polls, setPolls] = useState({});
   const apiBase =

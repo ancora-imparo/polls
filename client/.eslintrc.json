@@ -4,6 +4,11 @@
     "es2021": true
   },
   "extends": ["prettier", "eslint:recommended", "plugin:react/recommended"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "parserOptions": {
     "ecmaVersion": 12,
     "sourceType": "module"
