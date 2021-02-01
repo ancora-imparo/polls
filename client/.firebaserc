@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "ancora-imparo-polls",
+    "polls": "ancora-imparo-polls"
+  }
+}

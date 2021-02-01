@@ -35,12 +35,19 @@ const validatePoll = (polls) => {
 };
 
 app.get('/sdk', (req, res) => {
-  res.set('Access-Control-Allow-Origin', '*').status(200).send({
-    GOOGLE_APPLICATION_CREDENTIALS_CLIENT:
-      env.GOOGLE_APPLICATION_CREDENTIALS_CLIENT,
-    DATABASE_URL: env.DATABASE_URL,
-    DATABASE_AUTH_VARIABLE_UID_CLIENT: env.DATABASE_AUTH_VARIABLE_UID_CLIENT,
-  });
+  res
+    .set('Access-Control-Allow-Origin', '*')
+    .status(200)
+    .send({
+      apiKey: env.API_KEY,
+      authDomain: env.AUTH_DOMAIN,
+      databaseURL: env.DATABASE_URL,
+      projectId: env.PROJECT_ID,
+      storageBucket: `${env.PROJECT_ID}.appspot.com`,
+      messagingSenderId: env.SENDER_ID,
+      appId: env.APP_ID,
+      measurementId: `G-${env.MEASUREMENT_ID}`,
+    });
 });
 
 const validatePollCount = (polls) => {
