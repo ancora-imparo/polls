@@ -1,6 +1,6 @@
 name: Linter-ESLint
 
-on:[pull_request, workflow_dispatch]
+on: [pull_request, workflow_dispatch]
 
 jobs:
   lint:
@@ -18,6 +18,6 @@ jobs:
       
       - name: Install npm packages
         run: npm install
-      - name: test with Eslint
+      - name: Test with Eslint
         run: npm run test 
          
