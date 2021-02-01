@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
 import { initializeFirebase, readFromRef } from '../components/firebase';
+import * as constants from '../components/constants';
 export default function Home() {
   const [polls, setPolls] = useState({});
-  const apiBase =
-    process.env.API_BASE || `https://ancora-imparo-polls-api.herokuapp.com`;
   useEffect(async () => {
     try {
-      const response = await axios.get(`${apiBase}/sdk`);
+      const response = await axios.get(constants.ROUTE_SDK);
       const firebaseConfig = response.data;
       await initializeFirebase(firebaseConfig);
       const data = await readFromRef();
