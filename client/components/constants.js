@@ -1,4 +1,3 @@
 import * as env from './env';
 
-const apiBase = env.API_BASE;
-export const ROUTE_SDK = `${apiBase}/sdk`;
+export const ROUTE_SDK = `${env.API_BASE}/sdk`;
