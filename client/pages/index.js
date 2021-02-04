@@ -8,7 +8,11 @@ import AddIcon from '@material-ui/icons/Add';
 import env from '../env';
 import { Options } from './Options';
 
+import { initializeFirebase, readFromRef } from '../components/firebase';
+import * as constants from '../components/constants';
 export default function Home() {
+  //old
+<<<<<<< HEAD
   const [options, setOptions] = useState(['jbjk']);
   const [newOption, setNewOption] = useState();
   const [optionSelected, setOptionSelected] = useState();
@@ -68,5 +72,24 @@ export default function Home() {
         </Form>
       </Formik>
     </center>
+
+//new 
+  const [polls, setPolls] = useState({});
+  useEffect(async () => {
+    try {
+      const response = await axios.get(constants.ROUTE_SDK);
+      const firebaseConfig = response.data;
+      await initializeFirebase(firebaseConfig);
+      const data = await readFromRef();
+      setPolls(data);
+    } catch (err) {
+      console.error('error:', err);
+    }
+  }, []);
+  return (
+    <div>
+      <h2>Polls</h2>
+      <pre>{JSON.stringify(polls, null, 2)}</pre>
+    </div>
   );
 }
