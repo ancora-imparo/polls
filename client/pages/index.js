@@ -12,7 +12,8 @@ import * as constants from '../components/constants';
 
 export default function Home() {
   const [polls, setPolls] = useState({});
-  const [question, setQuestion] = useState();
+  const [pollId, setPollId] = useState('');
+  const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['First option']);
   const [newOption, setNewOption] = useState('');
   const [optionSelected, setOptionSelected] = useState();
@@ -44,17 +45,16 @@ export default function Home() {
   };
 
   const handleSave = async (e) => {
-    e.preventDefault();
     if (!question) {
       console.log('Enter Question');
       return;
     }
     try {
-      await axios.post(constants.ROUTE_CREATE, {
+      const response = await axios.post(constants.ROUTE_CREATE, {
         question: question,
         options: options,
       });
-      window.location.reload();
+      setPollId(response.data);
     } catch (err) {
       console.log(err.response);
     }

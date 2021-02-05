@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const express = require('express');
 const Joi = require('joi');
+const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const _ = require('lodash');
 
@@ -9,6 +10,7 @@ const store = require('./store');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const serviceAccount = JSON.parse(env.GOOGLE_APPLICATION_CREDENTIALS_SERVER);
 admin.initializeApp({
