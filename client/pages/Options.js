@@ -1,22 +1,32 @@
 import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import PropTypes from 'prop-types';
 
 export const Options = (props) => {
-  const { options, handleOptionSelect } = props;
-  function stringCheck(str) {
-    if (str.length > 10) str = str.substring(0, 10);
-    return str;
-  }
+  const { options, setOptions, handleOptionSelect } = props;
 
-  const List = options.map((option) => (
-    <ListItem key={Math.random()} button>
-      <ListItemText primary={<div>{stringCheck(option)}</div>}></ListItemText>
-    </ListItem>
+  return options.map((option) => (
+    <div key={Math.random()}>
+      <div>
+        {option}
+        <IconButton aria-label="delete">
+          <DeleteIcon
+            onClick={() => {
+              setOptions(
+                options.filter((element) => {
+                  return element !== option;
+                })
+              );
+            }}
+          />
+        </IconButton>
+      </div>
+    </div>
   ));
-
-  return <div>{List}</div>;
 };
 Options.propTypes = {
   options: PropTypes.array,
