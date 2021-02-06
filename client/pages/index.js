@@ -1,103 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Formik, Form } from 'formik';
+import Link from 'next/link';
 import TextField from '@material-ui/core/TextField';
-import { Button, Fab } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-
-import { Options } from './Options';
+import { Button } from '@material-ui/core';
 
 import { initializeFirebase, readFromRef } from '../components/firebase';
 import * as constants from '../components/constants';
+import Display from '../components/Display';
 
 export default function Home() {
-  const [polls, setPolls] = useState({});
-  const [pollId, setPollId] = useState('');
-  const [question, setQuestion] = useState('');
-  const [options, setOptions] = useState(['First option']);
-  const [newOption, setNewOption] = useState('');
-  const [optionSelected, setOptionSelected] = useState();
-
+  const [options, setOptions] = useState({});
+  const [poll, setPoll] = useState({});
+  const [uid, setUid] = useState('');
+  const [pollValid, setPollValid] = useState(false);
   useEffect(async () => {
     try {
       const response = await axios.get(constants.ROUTE_SDK);
       const firebaseConfig = response.data;
       await initializeFirebase(firebaseConfig);
-      const data = await readFromRef();
-      setPolls(data);
     } catch (err) {
       console.error('error:', err);
     }
   }, []);
 
-  const handleOptionSelect = (id) => {
-    setOptionSelected(options.option.find((option) => option.optionId === id));
+  const handleUidChange = (event) => {
+    setUid(event.target.value);
   };
-
-  const handleNewOptionChange = (event) => {
-    setNewOption(event.target.value);
-  };
-
-  const handleSubmit = () => {
-    if (newOption) {
-      setOptions([...options, newOption]);
-    }
-  };
-
-  const handleSave = async (e) => {
-    if (!question) {
-      console.log('Enter Question');
-      return;
-    }
-    try {
-      const response = await axios.post(constants.ROUTE_CREATE, {
-        question: question,
-        options: options,
-      });
-      setPollId(response.data);
-    } catch (err) {
-      console.log(err.response);
+  const handleSubmit = async () => {
+    if (uid) {
+      const data = await readFromRef(`/polls/${uid}`);
+      if (!data) {
+        alert('Invalid Poll ID');
+      } else {
+        setPoll(data);
+        setPollValid(true);
+      }
     }
   };
 
   return (
-    <center>
-      <Formik>
-        <Form>
-          <h2>Create a new poll</h2>
-          <TextField
-            id="standard-basic"
-            margin="normal"
-            value={question}
-            onChange={() => {
-              setQuestion(event.target.value);
-            }}
-            style={{ width: '45%' }}
-            label="Enter the question here"
-          />
-          <div>
+    <>
+      <div>
+        {pollValid ? null : (
+          <Link href="/create">
+            <a>Create new Poll </a>
+          </Link>
+        )}
+      </div>
+      <center>
+        <Formik>
+          <Form>
             <TextField
-              id="standard-basic"
+              id="input"
+              label="Enter the code here"
+              value={uid}
               margin="normal"
-              value={newOption}
-              style={{ width: '45%' }}
-              label="Enter the option"
-              onChange={handleNewOptionChange}
+              style={{ width: '55%' }}
+              helperText="517d67df-5973-4323-bbf5-7969d9a488ea"
+              variant="outlined"
+              onChange={handleUidChange}
             />
-            <Fab color="primary" aria-label="add">
-              <AddIcon onClick={handleSubmit} />
-            </Fab>
-            <Options
-              setOptions={setOptions}
-              options={options}
-              handleOptionSelect={handleOptionSelect}
-            />
-          </div>
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save
-          </Button>
-        </Form>
-      </Formik>
-    </center>
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </div>
+
+            {pollValid ? <Display poll={poll} /> : null}
+          </Form>
+        </Formik>
+      </center>
+    </>
   );
 }
