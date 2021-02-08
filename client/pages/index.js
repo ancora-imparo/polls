@@ -57,7 +57,7 @@ export default function Home() {
               value={uid}
               margin="normal"
               style={{ width: '55%' }}
-              helperText="517d67df-5973-4323-bbf5-7969d9a488ea"
+              helperText="Eg. 517d67df-5973-4323-bbf5-7969d9a488ea"
               variant="outlined"
               onChange={handleUidChange}
             />
