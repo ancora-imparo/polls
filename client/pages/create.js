@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Router from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
 import { Formik, Form } from 'formik';
 import TextField from '@material-ui/core/TextField';
-import { Button, Fab } from '@material-ui/core';
+import { Button, colors, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
 import Options from '../components/Options';
@@ -43,7 +44,9 @@ const Create = () => {
         question: question,
         options: options,
       });
-      setPollId(response.data);
+      if (response.status == 200) {
+        setPollId(response.data);
+      }
     } catch (err) {
       console.log(err.response);
     }
@@ -82,8 +85,9 @@ const Create = () => {
             />
           </div>
           <Button variant="contained" color="primary" onClick={handleSave}>
-            Save
+            Create
           </Button>
+          <div>{pollId ? `Poll id is "${pollId}".` : `Create new poll.`}</div>
         </Form>
       </Formik>
       <div>

@@ -90,8 +90,13 @@ app.post('/polls/count', async (req, res) => {
   );
   if (error) return res.status(400).send(errorMessage);
   const poll = await store.readFromRef(`/polls/${req.body.pollId}`);
-  poll.options[req.body.optionId].count++;
-  await store.writeToRef(poll, `/polls/${req.body.pollId}`);
+  try {
+    poll.options[req.body.optionId].count++;
+    await store.writeToRef(poll, `/polls/${req.body.pollId}`);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
   res.status(200).send(req.body.pollId);
 });
 

@@ -14,6 +14,7 @@ export default function Home() {
   const [poll, setPoll] = useState({});
   const [uid, setUid] = useState('');
   const [pollValid, setPollValid] = useState(false);
+
   useEffect(async () => {
     try {
       const response = await axios.get(constants.ROUTE_SDK);
@@ -27,6 +28,7 @@ export default function Home() {
   const handleUidChange = (event) => {
     setUid(event.target.value);
   };
+
   const handleSubmit = async () => {
     if (uid) {
       const data = await readFromRef(`/polls/${uid}`);
@@ -71,7 +73,7 @@ export default function Home() {
               </Button>
             </div>
 
-            {pollValid ? <Display poll={poll} /> : null}
+            {pollValid ? <Display poll={poll} uid={uid} /> : null}
           </Form>
         </Formik>
       </center>
