@@ -5,7 +5,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
 
 const Options = (props) => {
-  const { options, setOptions, handleOptionSelect } = props;
+  const { options, setOptions } = props;
 
   return options.map((option) => (
     <div key={Math.random()}>
@@ -28,6 +28,5 @@ const Options = (props) => {
 };
 Options.propTypes = {
   options: PropTypes.array,
-  handleOptionSelect: PropTypes.func,
 };
 export default Options;

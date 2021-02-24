@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
@@ -9,39 +9,28 @@ import AddIcon from '@material-ui/icons/Add';
 
 import Options from '../components/Options';
 
-import { initializeFirebase, readFromRef } from '../components/firebase';
 import * as constants from '../components/constants';
 
 const Create = () => {
-  const [polls, setPolls] = useState({});
-  const [pollId, setPollId] = useState('');
-  const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['First option']);
-  const [newOption, setNewOption] = useState('');
-  const [optionSelected, setOptionSelected] = useState();
-
-  const handleOptionSelect = (id) => {
-    setOptionSelected(options.option.find((option) => option.optionId === id));
-  };
-
-  const handleNewOptionChange = (event) => {
-    setNewOption(event.target.value);
-  };
+  const [pollId, setPollId] = useState('');
+  const question = useRef('');
+  const newOption = useRef('');
 
   const handleSubmit = () => {
-    if (newOption) {
-      setOptions([...options, newOption]);
+    if (newOption.current.value) {
+      setOptions([...options, newOption.current.value]);
     }
   };
 
   const handleSave = async () => {
-    if (!question) {
-      console.log('Enter Question');
+    if (!question.current.value) {
+      alert('Enter the Question');
       return;
     }
     try {
       const response = await axios.post(constants.ROUTE_CREATE, {
-        question: question,
+        question: question.current.value,
         options: options,
       });
       if (response.status == 200) {
@@ -54,41 +43,33 @@ const Create = () => {
   return (
     <center>
       <Formik>
-        <Form>
+        <form>
           <h2>Create a new poll</h2>
           <TextField
-            id="standard-basic"
+            id="question"
             margin="normal"
-            value={question}
-            onChange={() => {
-              setQuestion(event.target.value);
-            }}
+            inputRef={question}
             style={{ width: '45%' }}
             label="Enter the question here"
           />
           <div>
             <TextField
-              id="standard-basic"
+              id="option"
               margin="normal"
-              value={newOption}
               style={{ width: '45%' }}
               label="Enter the option"
-              onChange={handleNewOptionChange}
+              inputRef={newOption}
             />
             <Fab color="primary" aria-label="add">
               <AddIcon onClick={handleSubmit} />
             </Fab>
-            <Options
-              setOptions={setOptions}
-              options={options}
-              handleOptionSelect={handleOptionSelect}
-            />
+            <Options setOptions={setOptions} options={options} />
           </div>
           <Button variant="contained" color="primary" onClick={handleSave}>
             Create
           </Button>
-          <div>{pollId ? `Poll id is "${pollId}".` : `Create new poll.`}</div>
-        </Form>
+          <div>{pollId ? `Poll Id is "${pollId}".` : `Create new poll.`}</div>
+        </form>
       </Formik>
       <div>
         <Link href="/">

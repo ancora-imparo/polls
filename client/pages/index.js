@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Formik, Form } from 'formik';
 import Link from 'next/link';
@@ -10,10 +10,8 @@ import * as constants from '../components/constants';
 import Display from '../components/Display';
 
 export default function Home() {
-  const [options, setOptions] = useState({});
-  const [poll, setPoll] = useState({});
-  const [uid, setUid] = useState('');
-  const [pollValid, setPollValid] = useState(false);
+  const [poll, setPoll] = useState();
+  const uid = useRef();
 
   useEffect(async () => {
     try {
@@ -25,26 +23,24 @@ export default function Home() {
     }
   }, []);
 
-  const handleUidChange = (event) => {
-    setUid(event.target.value);
-  };
-
   const handleSubmit = async () => {
-    if (uid) {
-      const data = await readFromRef(`/polls/${uid}`);
+    if (uid.current.value) {
+      const data = await readFromRef(`/polls/${uid.current.value}`);
       if (!data) {
         alert('Invalid Poll ID');
       } else {
         setPoll(data);
-        setPollValid(true);
       }
     }
   };
-
+  console.log(poll);
+  if (poll) {
+    console.log('poll exists');
+  }
   return (
     <>
       <div>
-        {pollValid ? null : (
+        {poll ? null : (
           <Link href="/create">
             <a>Create new Poll </a>
           </Link>
@@ -54,14 +50,13 @@ export default function Home() {
         <Formik>
           <Form>
             <TextField
-              id="input"
+              id="uid"
               label="Enter the code here"
-              value={uid}
+              inputRef={uid}
               margin="normal"
               style={{ width: '55%' }}
               helperText="Eg. 517d67df-5973-4323-bbf5-7969d9a488ea"
               variant="outlined"
-              onChange={handleUidChange}
             />
             <div>
               <Button
@@ -72,8 +67,7 @@ export default function Home() {
                 Submit
               </Button>
             </div>
-
-            {pollValid ? <Display poll={poll} uid={uid} /> : null}
+            {poll ? <Display poll={poll} uid={uid.current.value} /> : null}
           </Form>
         </Formik>
       </center>
