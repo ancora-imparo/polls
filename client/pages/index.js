@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import Link from 'next/link';
 import TextField from '@material-ui/core/TextField';
 import { Button } from '@material-ui/core';
@@ -47,28 +48,44 @@ export default function Home() {
         )}
       </div>
       <center>
-        <Formik>
-          <Form>
-            <TextField
-              id="uid"
-              label="Enter the code here"
-              inputRef={uid}
-              margin="normal"
-              style={{ width: '55%' }}
-              helperText="Eg. 517d67df-5973-4323-bbf5-7969d9a488ea"
-              variant="outlined"
-            />
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
-            </div>
-            {poll ? <Display poll={poll} uid={uid.current.value} /> : null}
-          </Form>
+        <Formik
+          initialValues={{
+            uniqueId: uid.current,
+          }}
+          validationSchema={Yup.object().shape({
+            uniqueId: Yup.string().required('Code required'),
+          })}
+        >
+          {({ values, touched, errors, handleChange, handleBlur }) => (
+            <Form>
+              <TextField
+                name="uniqueId"
+                label="Enter the code here"
+                inputRef={uid}
+                helperText={
+                  errors.uniqueId && touched.uniqueId
+                    ? errors.uniqueId
+                    : 'Eg. 517d67df-5973-4323-bbf5-7969d9a488ea'
+                }
+                error={errors.uniqueId && touched.uniqueId ? true : false}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                margin="normal"
+                style={{ width: '55%' }}
+                variant="outlined"
+              />
+              <div>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </Button>
+              </div>
+              {poll ? <Display poll={poll} uid={uid.current.value} /> : null}
+            </Form>
+          )}
         </Formik>
       </center>
     </>
