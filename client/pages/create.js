@@ -39,7 +39,7 @@ const Create = () => {
         setPollId(response.data);
       }
     } catch (err) {
-      console.log(err.response);
+      console.error('error:', err);
     }
   };
   return (

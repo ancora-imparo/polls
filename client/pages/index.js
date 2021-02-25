@@ -34,10 +34,6 @@ export default function Home() {
       }
     }
   };
-  console.log(poll);
-  if (poll) {
-    console.log('poll exists');
-  }
   return (
     <>
       <div>

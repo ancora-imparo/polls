@@ -20,7 +20,7 @@ export default function Display(props) {
         Router.reload();
       }
     } catch (err) {
-      console.log(err);
+      console.error('error:', err);
     }
   };
 
