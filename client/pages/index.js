@@ -24,14 +24,12 @@ export default function Home() {
     }
   }, []);
 
-  const handleSubmit = async () => {
-    if (uid.current.value) {
-      const data = await readFromRef(`/polls/${uid.current.value}`);
-      if (!data) {
-        alert('Invalid Poll ID');
-      } else {
-        setPoll(data);
-      }
+  const handleClick = async () => {
+    const data = await readFromRef(`/polls/${uid.current.value}`);
+    if (!data) {
+      alert('Invalid Poll ID');
+    } else {
+      setPoll(data);
     }
   };
   return (
@@ -52,8 +50,17 @@ export default function Home() {
             uniqueId: Yup.string().required('Code required'),
           })}
         >
-          {({ values, touched, errors, handleChange, handleBlur }) => (
-            <Form>
+          {({
+            values,
+            touched,
+            errors,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            dirty,
+            isValid,
+          }) => (
+            <Form onSubmit={handleSubmit}>
               <TextField
                 name="uniqueId"
                 label="Enter the code here"
@@ -74,7 +81,8 @@ export default function Home() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleSubmit}
+                  disabled={!(dirty && isValid)}
+                  onClick={handleClick}
                 >
                   Submit
                 </Button>

@@ -54,8 +54,17 @@ const Create = () => {
           option: Yup.string().required('Option cannot be empty'),
         })}
       >
-        {({ values, touched, errors, handleChange, handleBlur }) => (
-          <Form>
+        {({
+          values,
+          touched,
+          errors,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isValid,
+          dirty,
+        }) => (
+          <Form onSubmit={handleSubmit}>
             <h2>Create a new poll</h2>
             <TextField
               name="question"
@@ -89,7 +98,12 @@ const Create = () => {
               </Fab>
               <Options setOptions={setOptions} options={options} />
             </div>
-            <Button variant="contained" color="primary" onClick={handleSave}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSave}
+              disabled={errors.question && touched.question}
+            >
               Create
             </Button>
             <div>{pollId ? `Poll Id is "${pollId}".` : `Create new poll.`}</div>
