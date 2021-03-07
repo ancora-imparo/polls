@@ -1,8 +1,9 @@
 import React from 'react';
 import Router from 'next/router';
-import { Formik, Form } from 'formik';
 import axios from 'axios';
+import { Formik, Form } from 'formik';
 import { Button, ButtonGroup } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 import * as constants from '../components/constants';
 
@@ -17,7 +18,7 @@ export default function Display(props) {
       });
       if (response.status == 200) {
         alert('Successfully Submitted');
-        Router.reload();
+        Router.push('/create');
       }
     } catch (err) {
       console.error('error:', err);
@@ -46,3 +47,9 @@ export default function Display(props) {
     </Formik>
   );
 }
+
+Display.propTypes = {
+  options: PropTypes.array,
+  poll: PropTypes.array,
+  uid: PropTypes.string,
+};

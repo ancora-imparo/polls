@@ -1,12 +1,10 @@
 import React from 'react';
-import { Formik, Form, FieldArray, Field } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, FieldArray } from 'formik';
 import IconButton from '@material-ui/core/IconButton';
-import { Button, Fab } from '@material-ui/core';
+import { Button, TextField, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
-
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 
 const Options = (props) => {

@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import axios from 'axios';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import Link from 'next/link';
-import TextField from '@material-ui/core/TextField';
-import { Button } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 
 import { initializeFirebase, readFromRef } from '../components/firebase';
 import * as constants from '../components/constants';
