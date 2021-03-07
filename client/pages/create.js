@@ -13,17 +13,9 @@ import Options from '../components/Options';
 import * as constants from '../components/constants';
 
 const Create = () => {
-  const [options, setOptions] = useState(['First option']);
+  const [options, setOptions] = useState(['First option', 'Second option']);
   const [pollId, setPollId] = useState('');
   const questionRef = useRef('');
-  const newOption = useRef('');
-
-  const handleAdd = () => {
-    if (newOption.current.value) {
-      setOptions([...options, newOption.current.value]);
-      newOption.current.value = '';
-    }
-  };
 
   const handleSave = async () => {
     if (!questionRef.current.value) {
@@ -47,11 +39,9 @@ const Create = () => {
       <Formik
         initialValues={{
           question: questionRef.current,
-          option: newOption.current,
         }}
         validationSchema={Yup.object().shape({
           question: Yup.string().required('Question cannot be empty'),
-          option: Yup.string().required('Option cannot be empty'),
         })}
       >
         {({
@@ -80,22 +70,6 @@ const Create = () => {
               style={{ width: '45%' }}
             />
             <div>
-              <TextField
-                id="option"
-                label="Enter the option"
-                inputRef={newOption}
-                helperText={
-                  errors.option && touched.option ? errors.option : ''
-                }
-                error={errors.option && touched.option ? true : false}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                margin="normal"
-                style={{ width: '45%' }}
-              />
-              <Fab color="primary" aria-label="add">
-                <AddIcon onClick={handleAdd} />
-              </Fab>
               <Options setOptions={setOptions} options={options} />
             </div>
             <Button
