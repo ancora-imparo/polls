@@ -50,6 +50,6 @@ export default function Display(props) {
 
 Display.propTypes = {
   options: PropTypes.array,
-  poll: PropTypes.array,
+  poll: PropTypes.object,
   uid: PropTypes.string,
 };

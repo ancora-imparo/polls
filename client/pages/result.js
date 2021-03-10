@@ -1,27 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
-import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { Formik, Form } from 'formik';
 import { Button, TextField } from '@material-ui/core';
 
-import { initializeFirebase, readFromRef } from '../components/firebase';
-import * as constants from '../components/constants';
-import Display from '../components/Display';
+import Results from '../components/Results';
+import { readFromRef } from '../components/firebase';
 
-export default function Home() {
-  const [poll, setPoll] = useState();
+export default function Result() {
   const uid = useRef();
-
-  useEffect(async () => {
-    try {
-      const response = await axios.get(constants.ROUTE_SDK);
-      const firebaseConfig = response.data;
-      await initializeFirebase(firebaseConfig);
-    } catch (err) {
-      console.error('error:', err);
-    }
-  }, []);
+  const [poll, setPoll] = useState();
 
   const handleClick = async () => {
     const data = await readFromRef(`/polls/${uid.current.value}`);
@@ -31,18 +19,16 @@ export default function Home() {
       setPoll(data);
     }
   };
+
   return (
     <>
       <div>
-        {poll ? null : (
-          <Link href="/create">
-            <a>Create new Poll </a>
-          </Link>
-        )}
+        <Link href="/">
+          <a>Home</a>
+        </Link>
       </div>
       <center>
-        <h2 style={{ color: 'darkcyan' }}>Home page</h2>
-
+        <h2 style={{ color: 'darkcyan' }}>Results</h2>
         <Formik
           initialValues={{
             uniqueId: uid.current,
@@ -88,7 +74,7 @@ export default function Home() {
                   Submit
                 </Button>
               </div>
-              {poll ? <Display poll={poll} uid={uid.current.value} /> : null}
+              {poll ? <Results poll={poll} /> : null}
             </Form>
           )}
         </Formik>
