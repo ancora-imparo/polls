@@ -38,9 +38,9 @@ const Options = (props) => {
                   values.options.map((opt, index) => (
                     <div key={index}>
                       <TextField
-                        id="option"
+                        id={`options.${index}`}
                         name={`options.${index}`}
-                        placeholder={opt}
+                        placeholder={`option-${index + 1}`}
                         label="Enter the option"
                         variant="outlined"
                         error={

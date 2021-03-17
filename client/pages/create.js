@@ -4,12 +4,13 @@ import axios from 'axios';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button, TextField } from '@material-ui/core';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 
 import Options from '../components/Options';
 import * as constants from '../components/constants';
 
 const Create = () => {
-  const [options, setOptions] = useState(['First option', 'Second option']);
+  const [options, setOptions] = useState(['', '']);
   const [pollId, setPollId] = useState('');
   const formRef = useRef();
 
@@ -68,6 +69,7 @@ const Create = () => {
               <div>
                 <Options setOptions={setOptions} options={options} />
               </div>
+
               <Button
                 variant="contained"
                 color="primary"
@@ -76,12 +78,23 @@ const Create = () => {
               >
                 Create
               </Button>
+
               <div>
                 {pollId ? (
                   <div>
-                    <p>
+                    <p style={{ fontSize: 20, color: 'orangered' }}>
                       Poll Id is <b>{pollId}</b>.
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => navigator.clipboard.writeText(pollId)}
+                        startIcon={<FileCopyOutlinedIcon />}
+                      >
+                        Copy to clipboard
+                      </Button>
                     </p>
+
                     <Link href="/">
                       <a>View Results</a>
                     </Link>
