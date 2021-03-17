@@ -12,6 +12,7 @@ import Display from '../components/Display';
 export default function Home() {
   const [poll, setPoll] = useState();
   const uid = useRef();
+  const [errorMessage, setError] = useState(null);
 
   useEffect(async () => {
     try {
@@ -26,7 +27,8 @@ export default function Home() {
   const handleClick = async () => {
     const data = await readFromRef(`/polls/${uid.current.value}`);
     if (!data) {
-      alert('Invalid Poll ID');
+      setPoll(null);
+      setError(<h3 style={{ color: 'crimson' }}>Enter a valid pollID</h3>);
     } else {
       setPoll(data);
     }
@@ -88,7 +90,11 @@ export default function Home() {
                   Submit
                 </Button>
               </div>
-              {poll ? <Display poll={poll} uid={uid.current.value} /> : null}
+              {poll ? (
+                <Display poll={poll} uid={uid.current.value} />
+              ) : (
+                errorMessage
+              )}
             </Form>
           )}
         </Formik>

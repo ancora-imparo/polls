@@ -11,16 +11,12 @@ import * as constants from '../components/constants';
 const Create = () => {
   const [options, setOptions] = useState(['First option', 'Second option']);
   const [pollId, setPollId] = useState('');
-  const questionRef = useRef('');
+  const formRef = useRef();
 
   const handleSave = async () => {
-    if (!questionRef.current.value) {
-      alert('Enter the Question');
-      return;
-    }
     try {
       const response = await axios.post(constants.ROUTE_CREATE, {
-        question: questionRef.current.value,
+        question: formRef.current.values.question,
         options: options,
       });
       if (response.status == 200) {
@@ -40,8 +36,9 @@ const Create = () => {
       <center>
         <h2 style={{ color: 'darkcyan' }}>Create a new poll</h2>
         <Formik
+          innerRef={formRef}
           initialValues={{
-            question: questionRef.current,
+            question: '',
           }}
           validationSchema={Yup.object().shape({
             question: Yup.string().required('Question cannot be empty'),
@@ -54,18 +51,15 @@ const Create = () => {
             handleChange,
             handleBlur,
             handleSubmit,
-            isValid,
             dirty,
           }) => (
-            <Form onSubmit={handleSubmit}>
+            <div>
               <TextField
+                id="question"
                 name="question"
                 label="Enter the question here"
-                inputRef={questionRef}
-                helperText={
-                  errors.question && touched.question ? errors.question : ''
-                }
-                error={errors.question && touched.question ? true : false}
+                error={errors.question ? true : false}
+                helperText={errors.question ? errors.question : ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 margin="normal"
@@ -78,7 +72,7 @@ const Create = () => {
                 variant="contained"
                 color="primary"
                 onClick={handleSave}
-                disabled={errors.question && touched.question}
+                disabled={!dirty || errors.question ? true : false}
               >
                 Create
               </Button>
@@ -96,7 +90,7 @@ const Create = () => {
                   ` `
                 )}
               </div>
-            </Form>
+            </div>
           )}
         </Formik>
         <div>

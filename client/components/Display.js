@@ -17,7 +17,6 @@ export default function Display(props) {
         optionId: key,
       });
       if (response.status == 200) {
-        alert('Successfully Submitted');
         Router.push('/create');
       }
     } catch (err) {

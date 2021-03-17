@@ -1,20 +1,34 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Button, TextField } from '@material-ui/core';
 
 import Results from '../components/Results';
-import { readFromRef } from '../components/firebase';
+import { initializeFirebase, readFromRef } from '../components/firebase';
+import * as constants from '../components/constants';
 
 export default function Result() {
   const uid = useRef();
   const [poll, setPoll] = useState();
+  const [errorMessage, setError] = useState(null);
+
+  useEffect(async () => {
+    try {
+      const response = await axios.get(constants.ROUTE_SDK);
+      const firebaseConfig = response.data;
+      await initializeFirebase(firebaseConfig);
+    } catch (err) {
+      console.error('error:', err);
+    }
+  }, []);
 
   const handleClick = async () => {
     const data = await readFromRef(`/polls/${uid.current.value}`);
     if (!data) {
-      alert('Invalid Poll ID');
+      setPoll(null);
+      setError(<h3 style={{ color: 'crimson' }}>Enter a valid pollID</h3>);
     } else {
       setPoll(data);
     }
@@ -74,7 +88,7 @@ export default function Result() {
                   Submit
                 </Button>
               </div>
-              {poll ? <Results poll={poll} /> : null}
+              {poll ? <Results poll={poll} /> : errorMessage}
             </Form>
           )}
         </Formik>

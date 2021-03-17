@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Formik, Form, FieldArray } from 'formik';
 import IconButton from '@material-ui/core/IconButton';
 import { Button, TextField, Fab } from '@material-ui/core';
@@ -40,15 +40,12 @@ const Options = (props) => {
                       <TextField
                         id="option"
                         name={`options.${index}`}
-                        value={opt}
+                        placeholder={opt}
                         label="Enter the option"
                         variant="outlined"
                         error={
-                          errors &&
-                          errors.options &&
-                          errors.options[index] &&
-                          touched.options &&
-                          touched.options[index]
+                          !dirty ||
+                          (errors && errors.options && errors.options[index])
                             ? true
                             : false
                         }
@@ -66,17 +63,19 @@ const Options = (props) => {
                         margin="normal"
                         style={{ width: '45%' }}
                       />
-                      <IconButton aria-label="delete">
-                        <DeleteIcon
-                          type="button"
-                          onClick={() => arrayHelpers.remove(index)}
-                        />
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => arrayHelpers.remove(index)}
+                      >
+                        <DeleteIcon type="button" />
                       </IconButton>
 
-                      <Fab color="primary" aria-label="add">
-                        <AddIcon
-                          onClick={() => arrayHelpers.insert(index + 1, '')}
-                        />
+                      <Fab
+                        color="primary"
+                        aria-label="add"
+                        onClick={() => arrayHelpers.insert(index + 1, '')}
+                      >
+                        <AddIcon type="button" />
                       </Fab>
                     </div>
                   ))
