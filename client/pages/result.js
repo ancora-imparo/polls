@@ -1,26 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Button, TextField } from '@material-ui/core';
 
 import Results from '../components/Results';
-import { initializeFirebase, readFromRef } from '../components/firebase';
-import * as constants from '../components/constants';
+import { readFromRef } from '../components/firebase';
 
 export default function Result() {
   const [poll, setPoll] = useState();
-
-  useEffect(async () => {
-    try {
-      const response = await axios.get(constants.ROUTE_SDK);
-      const firebaseConfig = response.data;
-      await initializeFirebase(firebaseConfig);
-    } catch (err) {
-      console.error('error:', err);
-    }
-  }, []);
 
   return (
     <>
