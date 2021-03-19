@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app';
+import { Container } from 'next/app';
 import Layout from '../components/Layout';
 
 function MyApp({ Component, pageProps }) {

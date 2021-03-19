@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -10,9 +10,7 @@ import { initializeFirebase, readFromRef } from '../components/firebase';
 import * as constants from '../components/constants';
 
 export default function Result() {
-  const uid = useRef();
   const [poll, setPoll] = useState();
-  const [errorMessage, setError] = useState(null);
 
   useEffect(async () => {
     try {
@@ -23,16 +21,6 @@ export default function Result() {
       console.error('error:', err);
     }
   }, []);
-
-  const handleClick = async () => {
-    const data = await readFromRef(`/polls/${uid.current.value}`);
-    if (!data) {
-      setPoll(null);
-      setError(<h3 style={{ color: 'crimson' }}>Enter a valid pollID</h3>);
-    } else {
-      setPoll(data);
-    }
-  };
 
   return (
     <>
@@ -45,7 +33,7 @@ export default function Result() {
         <h2 style={{ color: 'darkcyan' }}>Results</h2>
         <Formik
           initialValues={{
-            uniqueId: uid.current,
+            uniqueId: '',
           }}
           validationSchema={Yup.object().shape({
             uniqueId: Yup.string().required('Code required'),
@@ -57,15 +45,19 @@ export default function Result() {
             errors,
             handleChange,
             handleBlur,
-            handleSubmit,
             dirty,
             isValid,
           }) => (
-            <Form onSubmit={handleSubmit}>
+            <Form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const data = await readFromRef(`/polls/${values.uniqueId}`);
+                setPoll(data ? data : null);
+              }}
+            >
               <TextField
                 name="uniqueId"
                 label="Enter the code here"
-                inputRef={uid}
                 helperText={
                   errors.uniqueId && touched.uniqueId
                     ? errors.uniqueId
@@ -83,12 +75,16 @@ export default function Result() {
                   variant="contained"
                   color="primary"
                   disabled={!(dirty && isValid)}
-                  onClick={handleClick}
+                  type="submit"
                 >
                   Submit
                 </Button>
               </div>
-              {poll ? <Results poll={poll} /> : errorMessage}
+              {poll ? (
+                <Results poll={poll} />
+              ) : (
+                <h3 style={{ color: 'crimson' }}>Enter a valid pollID</h3>
+              )}
             </Form>
           )}
         </Formik>

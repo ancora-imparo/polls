@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { Formik, Form } from 'formik';
@@ -7,12 +7,10 @@ import { Button, TextField } from '@material-ui/core';
 
 import { initializeFirebase, readFromRef } from '../components/firebase';
 import * as constants from '../components/constants';
-import Display from '../components/Display';
+import Vote from '../components/Vote';
 
 export default function Home() {
   const [poll, setPoll] = useState();
-  const uid = useRef();
-  const [errorMessage, setError] = useState(null);
 
   useEffect(async () => {
     try {
@@ -24,30 +22,25 @@ export default function Home() {
     }
   }, []);
 
-  const handleClick = async () => {
-    const data = await readFromRef(`/polls/${uid.current.value}`);
-    if (!data) {
-      setPoll(null);
-      setError(<h3 style={{ color: 'crimson' }}>Enter a valid pollID</h3>);
-    } else {
-      setPoll(data);
-    }
-  };
   return (
     <>
       <div>
-        {poll ? null : (
-          <Link href="/create">
-            <a>Create new Poll </a>
-          </Link>
-        )}
+        <Link href="/create">
+          <a style={{ margin: '5px' }}>Create new Poll </a>
+        </Link>
+
+        <Link href="/result">
+          <a style={{ float: 'right', margin: '5px' }}>
+            View results of a Poll
+          </a>
+        </Link>
       </div>
       <center>
         <h2 style={{ color: 'darkcyan' }}>Home page</h2>
 
         <Formik
           initialValues={{
-            uniqueId: uid.current,
+            uniqueId: '',
           }}
           validationSchema={Yup.object().shape({
             uniqueId: Yup.string().required('Code required'),
@@ -59,15 +52,19 @@ export default function Home() {
             errors,
             handleChange,
             handleBlur,
-            handleSubmit,
             dirty,
             isValid,
           }) => (
-            <Form onSubmit={handleSubmit}>
+            <Form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const data = await readFromRef(`/polls/${values.uniqueId}`);
+                setPoll(data ? data : null);
+              }}
+            >
               <TextField
                 name="uniqueId"
                 label="Enter the code here"
-                inputRef={uid}
                 helperText={
                   errors.uniqueId && touched.uniqueId
                     ? errors.uniqueId
@@ -85,15 +82,15 @@ export default function Home() {
                   variant="contained"
                   color="primary"
                   disabled={!(dirty && isValid)}
-                  onClick={handleClick}
+                  type="submit"
                 >
                   Submit
                 </Button>
               </div>
               {poll ? (
-                <Display poll={poll} uid={uid.current.value} />
+                <Vote poll={poll} uid={values.uniqueId} />
               ) : (
-                errorMessage
+                <h3 style={{ color: 'crimson' }}>Enter a valid pollID</h3>
               )}
             </Form>
           )}

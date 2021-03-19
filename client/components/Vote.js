@@ -1,14 +1,16 @@
-import React from 'react';
-import Router from 'next/router';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Formik, Form } from 'formik';
 import { Button, ButtonGroup } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import * as constants from '../components/constants';
+import * as constants from './constants';
 
 export default function Display(props) {
   const { poll, uid } = props;
+  const [status, setStatus] = useState();
+  if (!poll) {
+    return null;
+  }
 
   const handleSubmit = async (key) => {
     try {
@@ -17,10 +19,17 @@ export default function Display(props) {
         optionId: key,
       });
       if (response.status == 200) {
-        Router.push('/create');
+        setStatus(
+          <h3 style={{ color: 'green' }}>Your vote was succefully recorded!</h3>
+        );
       }
     } catch (err) {
       console.error('error:', err);
+      setStatus(
+        <h3 style={{ color: 'red' }}>
+          Your vote was not recorded due to some problem
+        </h3>
+      );
     }
   };
 
@@ -32,18 +41,17 @@ export default function Display(props) {
   ));
 
   return (
-    <Formik>
-      <Form>
-        <h2 style={{ color: 'blue' }}>{poll.question}</h2>
-        <ButtonGroup
-          variant="contained"
-          color="secondary"
-          aria-label="contained primary button group"
-        >
-          {opt}
-        </ButtonGroup>
-      </Form>
-    </Formik>
+    <div>
+      <h2 style={{ color: 'blue' }}>{poll.question}</h2>
+      <ButtonGroup
+        variant="contained"
+        color="secondary"
+        aria-label="contained primary button group"
+      >
+        {opt}
+      </ButtonGroup>
+      {status}
+    </div>
   );
 }
 
