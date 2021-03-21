@@ -3,10 +3,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
-import { Button, TextField, Fab } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
+import { Button, TextField } from '@material-ui/core';
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 
 import * as constants from '../components/constants';
@@ -26,7 +23,7 @@ const Create = () => {
         <Formik
           initialValues={{
             question: '',
-            options: ['', ''],
+            options: [''],
           }}
           validationSchema={Yup.object().shape({
             question: Yup.string().required('Question cannot be empty'),
@@ -35,10 +32,11 @@ const Create = () => {
             ),
           })}
         >
-          {({ values, touched, errors, handleChange, handleBlur, dirty }) => (
+          {({ values, errors, handleChange, handleBlur, dirty }) => (
             <Form
               onSubmit={async (e) => {
                 e.preventDefault();
+                values.options.pop();
                 try {
                   const response = await axios.post(constants.ROUTE_CREATE, {
                     question: values.question,
@@ -75,7 +73,8 @@ const Create = () => {
                               id={`options.${index}`}
                               name={`options.${index}`}
                               placeholder={`option-${index + 1}`}
-                              label="Enter the option"
+                              value={opt}
+                              label={`Enter option-${index + 1}`}
                               variant="outlined"
                               error={
                                 !dirty ||
@@ -85,34 +84,20 @@ const Create = () => {
                                   ? true
                                   : false
                               }
-                              helperText={
-                                errors &&
-                                errors.options &&
-                                errors.options[index] &&
-                                touched.options &&
-                                touched.options[index]
-                                  ? errors.options[index]
-                                  : ''
-                              }
                               onChange={handleChange}
-                              onBlur={handleBlur}
                               margin="normal"
                               style={{ width: '45%' }}
+                              onFocus={() => {
+                                if (index + 1 == values.options.length) {
+                                  arrayHelpers.insert(index + 1, '');
+                                }
+                              }}
+                              onBlur={() => {
+                                if (!values.options[index]) {
+                                  arrayHelpers.remove(index);
+                                }
+                              }}
                             />
-                            <IconButton
-                              aria-label="delete"
-                              onClick={() => arrayHelpers.remove(index)}
-                            >
-                              <DeleteIcon type="button" />
-                            </IconButton>
-
-                            <Fab
-                              color="primary"
-                              aria-label="add"
-                              onClick={() => arrayHelpers.insert(index + 1, '')}
-                            >
-                              <AddIcon type="button" />
-                            </Fab>
                           </div>
                         ))
                       ) : (
@@ -134,9 +119,7 @@ const Create = () => {
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={
-                  !dirty || errors.question || errors.options ? true : false
-                }
+                disabled={!dirty || errors.question ? true : false}
               >
                 Create
               </Button>
