@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, ButtonGroup } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 import * as constants from './constants';
@@ -32,20 +33,37 @@ export default function Display(props) {
       );
     }
   };
-
+  const VoteButton = withStyles(() => ({
+    root: {
+      color: 'white',
+      margin: '5px',
+      fontSize: '110%',
+      backgroundColor: '#177ecf ',
+      '&:hover': {
+        backgroundColor: '#ab00de',
+      },
+    },
+  }))(Button);
   const keys = Object.keys(poll.options);
   const opt = keys.map((key) => (
-    <Button key={key} onClick={() => handleSubmit(key)}>
+    <VoteButton key={key} onClick={() => handleSubmit(key)}>
       {poll.options[key].value}
-    </Button>
+    </VoteButton>
   ));
 
   return (
     <div>
-      <h2 style={{ color: 'blue' }}>{poll.question}</h2>
+      <h2
+        style={{
+          color: 'orangered',
+          fontSize: '44px',
+          fontFamily: 'sans-serif',
+        }}
+      >
+        {poll.question}
+      </h2>
       <ButtonGroup
         variant="contained"
-        color="secondary"
         aria-label="contained primary button group"
       >
         {opt}

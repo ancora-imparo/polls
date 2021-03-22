@@ -7,6 +7,7 @@ import { Button, TextField } from '@material-ui/core';
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 
 import * as constants from '../components/constants';
+import { SubmitButton } from '../components/Layout';
 
 const Create = () => {
   const [pollId, setPollId] = useState('');
@@ -19,7 +20,15 @@ const Create = () => {
         </Link>
       </div>
       <center>
-        <h2 style={{ color: 'darkcyan' }}>Create a new poll</h2>
+        <h2
+          style={{
+            color: 'darkcyan',
+            fontSize: '40px',
+            fontFamily: 'sans-serif',
+          }}
+        >
+          Create a new poll
+        </h2>
         <Formik
           initialValues={{
             question: '',
@@ -52,6 +61,11 @@ const Create = () => {
             >
               <TextField
                 id="question"
+                InputLabelProps={{ style: { fontSize: 28, margin: '10px' } }}
+                inputProps={{ style: { fontSize: 30, margin: '10px' } }}
+                FormHelperTextProps={{
+                  style: { fontSize: 20, margin: '10px' },
+                }}
                 name="question"
                 label="Enter the question here"
                 error={errors.question ? true : false}
@@ -59,70 +73,65 @@ const Create = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 margin="normal"
-                style={{ width: '45%' }}
+                style={{ width: '48%' }}
               />
               <div>
                 <FieldArray
                   name="options"
                   render={(arrayHelpers) => (
                     <div>
-                      {values.options && values.options.length > 0 ? (
-                        values.options.map((opt, index) => (
-                          <div key={index}>
-                            <TextField
-                              id={`options.${index}`}
-                              name={`options.${index}`}
-                              placeholder={`option-${index + 1}`}
-                              value={opt}
-                              label={`Enter option-${index + 1}`}
-                              variant="outlined"
-                              error={
-                                !dirty ||
-                                (errors &&
-                                  errors.options &&
-                                  errors.options[index])
-                                  ? true
-                                  : false
+                      {values.options.map((opt, index) => (
+                        <div key={index}>
+                          <TextField
+                            id={`options.${index}`}
+                            InputLabelProps={{
+                              style: { fontSize: 24, margin: '10px' },
+                            }}
+                            inputProps={{
+                              style: { fontSize: 24, margin: '10px' },
+                            }}
+                            name={`options.${index}`}
+                            placeholder={`option-${index + 1}`}
+                            value={opt}
+                            label={`Enter option-${index + 1}`}
+                            variant="outlined"
+                            error={
+                              !dirty ||
+                              (errors &&
+                                errors.options &&
+                                errors.options[index])
+                                ? true
+                                : false
+                            }
+                            onChange={handleChange}
+                            margin="normal"
+                            style={{ width: '45%' }}
+                            onFocus={() => {
+                              if (index + 1 == values.options.length) {
+                                arrayHelpers.insert(index + 1, '');
                               }
-                              onChange={handleChange}
-                              margin="normal"
-                              style={{ width: '45%' }}
-                              onFocus={() => {
-                                if (index + 1 == values.options.length) {
-                                  arrayHelpers.insert(index + 1, '');
-                                }
-                              }}
-                              onBlur={() => {
-                                if (!values.options[index]) {
-                                  arrayHelpers.remove(index);
-                                }
-                              }}
-                            />
-                          </div>
-                        ))
-                      ) : (
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          type="button"
-                          onClick={() => arrayHelpers.push('')}
-                        >
-                          Add a option
-                        </Button>
-                      )}
+                            }}
+                            onBlur={() => {
+                              if (!values.options[index]) {
+                                arrayHelpers.remove(index);
+                              }
+                            }}
+                          />
+                        </div>
+                      ))}
                     </div>
                   )}
                 />
               </div>
 
-              <Button
+              <SubmitButton
                 variant="contained"
                 color="primary"
                 type="submit"
                 disabled={!dirty || errors.question ? true : false}
               >
                 Create
-              </Button>
+              </SubmitButton>
 
               <div>
                 {pollId ? (

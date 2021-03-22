@@ -1,3 +1,6 @@
+import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
+
 const Layout = (props) => {
   return (
     <div className="page-layout">
@@ -12,5 +15,17 @@ const Layout = (props) => {
     </div>
   );
 };
+
+export const SubmitButton = withStyles(() => ({
+  root: {
+    color: 'white',
+    margin: '5px',
+    fontSize: '100%',
+    backgroundColor: '#339911',
+    '&:hover': {
+      backgroundColor: 'primary',
+    },
+  },
+}))(Button);
 
 export default Layout;

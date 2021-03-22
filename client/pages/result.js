@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import { Button, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 import Results from '../components/Results';
 import { readFromRef } from '../components/firebase';
+import { SubmitButton } from '../components/Layout';
 
 export default function Result() {
   const [poll, setPoll] = useState();
@@ -18,7 +19,15 @@ export default function Result() {
         </Link>
       </div>
       <center>
-        <h2 style={{ color: 'darkcyan' }}>Results</h2>
+        <h2
+          style={{
+            color: 'darkcyan',
+            fontSize: '40px',
+            fontFamily: 'sans-serif',
+          }}
+        >
+          Results
+        </h2>
         <Formik
           initialValues={{
             uniqueId: '',
@@ -45,6 +54,11 @@ export default function Result() {
             >
               <TextField
                 name="uniqueId"
+                InputLabelProps={{ style: { fontSize: 28, margin: '10px' } }}
+                inputProps={{ style: { fontSize: 30, margin: '10px' } }}
+                FormHelperTextProps={{
+                  style: { fontSize: 20, margin: '10px' },
+                }}
                 label="Enter the code here"
                 helperText={
                   errors.uniqueId && touched.uniqueId
@@ -59,14 +73,14 @@ export default function Result() {
                 variant="outlined"
               />
               <div>
-                <Button
+                <SubmitButton
                   variant="contained"
                   color="primary"
                   disabled={!(dirty && isValid)}
                   type="submit"
                 >
                   Submit
-                </Button>
+                </SubmitButton>
               </div>
               {poll ? (
                 <Results poll={poll} />

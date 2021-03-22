@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { Button, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 import { readFromRef } from '../components/firebase';
 import Vote from '../components/Vote';
+import { SubmitButton } from '../components/Layout';
 
 export default function Home() {
   const [poll, setPoll] = useState();
@@ -24,7 +25,15 @@ export default function Home() {
         </Link>
       </div>
       <center>
-        <h2 style={{ color: 'darkcyan' }}>Home page</h2>
+        <h2
+          style={{
+            color: 'darkcyan',
+            fontSize: '40px',
+            fontFamily: 'sans-serif',
+          }}
+        >
+          Home page
+        </h2>
 
         <Formik
           initialValues={{
@@ -52,6 +61,11 @@ export default function Home() {
             >
               <TextField
                 name="uniqueId"
+                InputLabelProps={{ style: { fontSize: 28, margin: '10px' } }}
+                inputProps={{ style: { fontSize: 30, margin: '10px' } }}
+                FormHelperTextProps={{
+                  style: { fontSize: 20, margin: '10px' },
+                }}
                 label="Enter the code here"
                 helperText={
                   errors.uniqueId && touched.uniqueId
@@ -66,14 +80,14 @@ export default function Home() {
                 variant="outlined"
               />
               <div>
-                <Button
+                <SubmitButton
                   variant="contained"
                   color="primary"
                   disabled={!(dirty && isValid)}
                   type="submit"
                 >
                   Submit
-                </Button>
+                </SubmitButton>
               </div>
               {poll ? (
                 <Vote poll={poll} uid={values.uniqueId} />
