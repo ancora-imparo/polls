@@ -1,27 +1,21 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { Formik, Form } from 'formik';
 import { TextField } from '@material-ui/core';
 
+import Results from '../components/Results';
 import { readFromRef } from '../components/firebase';
-import Vote from '../components/Vote';
 import { SubmitButton } from '../components/Layout';
 
-export default function Home() {
+export default function Result() {
   const [poll, setPoll] = useState();
 
   return (
     <>
       <div>
-        <Link href="/create">
-          <a style={{ margin: '5px' }}>Create new Poll </a>
-        </Link>
-
-        <Link href="/result">
-          <a style={{ float: 'right', margin: '5px' }}>
-            View results of a Poll
-          </a>
+        <Link href="/">
+          <a>Home</a>
         </Link>
       </div>
       <center>
@@ -32,9 +26,8 @@ export default function Home() {
             fontFamily: 'sans-serif',
           }}
         >
-          Home page
+          Results
         </h2>
-
         <Formik
           initialValues={{
             uniqueId: '',
@@ -90,7 +83,7 @@ export default function Home() {
                 </SubmitButton>
               </div>
               {poll ? (
-                <Vote poll={poll} uid={values.uniqueId} />
+                <Results poll={poll} />
               ) : (
                 <h3 style={{ color: 'crimson' }}>Enter a valid pollID</h3>
               )}
