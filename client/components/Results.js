@@ -10,8 +10,10 @@ export default function Display(props) {
   const ResultButton = withStyles(() => ({
     root: {
       color: '#ed143d',
-      margin: '5px',
-      fontSize: '110%',
+      margin: '4px',
+      minWidth: 'auto',
+      minHeight: 'auto',
+      fontSize: '100%',
       backgroundColor: '#B1E41B',
       '&:hover': {
         backgroundColor: '#B1E41B',
@@ -34,7 +36,9 @@ export default function Display(props) {
       >
         {poll.question}
       </h2>
-      <ButtonGroup size="large">{displayOptions}</ButtonGroup>
+      <ButtonGroup orientation="vertical" size="large">
+        {displayOptions}
+      </ButtonGroup>
     </div>
   );
 }

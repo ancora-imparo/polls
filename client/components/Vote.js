@@ -21,7 +21,9 @@ export default function Display(props) {
       });
       if (response.status == 200) {
         setStatus(
-          <h3 style={{ color: 'green' }}>Your vote was succefully recorded!</h3>
+          <h3 style={{ color: 'green' }}>
+            Your vote was successfully recorded!
+          </h3>
         );
       }
     } catch (err) {
@@ -36,8 +38,10 @@ export default function Display(props) {
   const VoteButton = withStyles(() => ({
     root: {
       color: 'white',
-      margin: '5px',
-      fontSize: '110%',
+      margin: '4px',
+      minWidth: 'auto',
+      minHeight: 'auto',
+      fontSize: '100%',
       backgroundColor: '#177ecf ',
       '&:hover': {
         backgroundColor: '#ab00de',
@@ -63,6 +67,7 @@ export default function Display(props) {
         {poll.question}
       </h2>
       <ButtonGroup
+        orientation="vertical"
         variant="contained"
         aria-label="contained primary button group"
       >

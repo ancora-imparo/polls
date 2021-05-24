@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { TextField } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 
 import { readFromRef } from '../components/firebase';
 import Vote from '../components/Vote';
@@ -68,9 +69,23 @@ export default function Home() {
                 }}
                 label="Enter the code here"
                 helperText={
-                  errors.uniqueId && touched.uniqueId
-                    ? errors.uniqueId
-                    : 'Eg. 517d67df-5973-4323-bbf5-7969d9a488ea'
+                  errors.uniqueId && touched.uniqueId ? (
+                    errors.uniqueId
+                  ) : (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="primary"
+                      onClick={() =>
+                        navigator.clipboard.writeText(
+                          '517d67df-5973-4323-bbf5-7969d9a488ea'
+                        )
+                      }
+                      startIcon={<FileCopyOutlinedIcon />}
+                    >
+                      Demo: 517d67df-5973-4323-bbf5-7969d9a488ea
+                    </Button>
+                  )
                 }
                 error={errors.uniqueId && touched.uniqueId ? true : false}
                 onChange={handleChange}
